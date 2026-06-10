@@ -15,7 +15,7 @@ function AppInner() {
   const StepComponent = STEPS[Math.min(state.currentStep, 5)] || Step1Quote;
 
   return (
-    <div className="min-h-screen" style={{ background: '#f8f4ef' }}>
+    <div className="min-h-screen" style={{ background: '#f5f5f7' }}>
       <ProgressBar />
       <main>
         <StepComponent key={state.currentStep} />

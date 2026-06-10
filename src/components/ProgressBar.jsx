@@ -8,41 +8,47 @@ export function ProgressBar() {
   if (step === 5) return null;
 
   return (
-    <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-[rgba(0,0,0,0.08)]">
-      <div className="max-w-2xl mx-auto px-6 py-4">
-        {/* Brand row */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#1d1d1f] flex items-center justify-center shrink-0">
-              <span className="text-white font-bold text-xs">B</span>
-            </div>
-            <span className="font-semibold text-[#1d1d1f] text-sm tracking-tight">Baserate</span>
-            {state.quote?.purpose && (
-              <span className="hidden sm:inline-flex text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f5f5f7] text-[#86868b]">
-                {state.quote.purpose}
-              </span>
-            )}
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-[rgba(0,0,0,0.08)]">
+      <div className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between gap-8">
+        {/* Brand */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-[#1d1d1f] flex items-center justify-center">
+            <span className="text-white font-bold text-sm">B</span>
           </div>
-          <span className="text-xs font-mono text-[#adadb3] tabular-nums">{step + 1} / 5</span>
+          <span className="font-semibold text-[#1d1d1f] text-[15px] tracking-tight">Baserate</span>
+          {state.quote?.purpose && (
+            <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f5f5f7] text-[#86868b]">
+              {state.quote.purpose}
+            </span>
+          )}
         </div>
 
-        {/* Track */}
-        <div className="h-[2px] bg-[#e5e5e7] rounded-full mb-3 overflow-hidden">
-          <div
-            className="h-full bg-[#1d1d1f] rounded-full transition-all duration-700 ease-out"
-            style={{ width: `${(step / 4) * 100}%` }}
-          />
-        </div>
-
-        {/* Labels */}
-        <div className="flex justify-between">
+        {/* Steps */}
+        <nav className="flex items-center gap-1 flex-1 justify-center">
           {STEPS.map((name, i) => (
-            <span key={name} className={`text-[10px] font-semibold uppercase tracking-wider transition-colors ${
-              i === step ? 'text-[#1d1d1f]' : i < step ? 'text-[#007a5a]' : 'text-[#d1d1d6]'
-            }`}>{name}</span>
+            <div key={name} className="flex items-center">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full transition-colors"
+                style={{ background: i === step ? '#f5f5f7' : 'transparent' }}>
+                <span
+                  className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 transition-colors"
+                  style={{
+                    background: i < step ? '#007a5a' : i === step ? '#1d1d1f' : '#ebebed',
+                    color: i <= step ? 'white' : '#adadb3',
+                  }}
+                >
+                  {i < step ? '✓' : i + 1}
+                </span>
+                <span className={`text-[13px] font-medium transition-colors ${
+                  i === step ? 'text-[#1d1d1f]' : i < step ? 'text-[#007a5a]' : 'text-[#adadb3]'
+                }`}>{name}</span>
+              </div>
+              {i < STEPS.length - 1 && <div className="w-6 h-px bg-[#e5e5e7] mx-1" />}
+            </div>
           ))}
-        </div>
+        </nav>
+
+        <span className="text-xs font-mono text-[#adadb3] tabular-nums shrink-0">Step {step + 1} of 5</span>
       </div>
-    </div>
+    </header>
   );
 }

@@ -24,7 +24,7 @@ export function Step4Approval() {
   }, []);
 
   if (phase === 'assessing') return (
-    <div className="max-w-2xl mx-auto px-6 pb-24 pt-10">
+    <div className="max-w-3xl mx-auto px-8 pb-24 pt-14">
       <LoadingState message="Assessing your application…" submessage="Running serviceability and suitability assessment" />
       <div className="mt-8 flex flex-col gap-3 max-w-xs mx-auto">
         {['Checking debt-service ratio', 'Running lender policy matching', 'Ranking by Best Interests Duty', 'Generating Preliminary Credit Assessment'].map((t, i) => (
@@ -38,7 +38,7 @@ export function Step4Approval() {
   );
 
   if (demoOutcome === 'refer') return (
-    <div className="max-w-2xl mx-auto px-6 pb-24 pt-10">
+    <div className="max-w-3xl mx-auto px-8 pb-24 pt-14">
       <div className="text-center py-14 animate-fade-up">
         <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-[#fef3e2] border border-[#f59e0b]/25">
           <span className="text-4xl">⏸</span>
@@ -56,7 +56,7 @@ export function Step4Approval() {
   );
 
   return (
-    <div className="max-w-2xl mx-auto px-6 pb-24 pt-10 animate-fade-up">
+    <div className="max-w-3xl mx-auto px-8 pb-24 pt-14 animate-fade-up">
       {/* Status badge */}
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#eef7f3] border border-[#d1ede4] mb-5">

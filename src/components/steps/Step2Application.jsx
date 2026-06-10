@@ -6,25 +6,7 @@ import { Toggle } from '../ui/Toggle';
 import { LoadingState } from '../ui/Spinner';
 import { Tick } from '../ui/Tick';
 import { mockCall } from '../../utils/mock';
-
-function SubStepBar({ steps, current }) {
-  return (
-    <div className="flex items-center gap-1.5 mb-8 overflow-x-auto pb-1">
-      {steps.map((s, i) => (
-        <div key={s} className="flex items-center gap-1.5 shrink-0">
-          <div className="px-3 py-1 rounded-lg text-[11px] font-semibold transition-all"
-            style={{
-              background: i === current ? '#1d1d1f' : i < current ? '#eef7f3' : '#f5f5f7',
-              color: i === current ? 'white' : i < current ? '#007a5a' : '#adadb3',
-            }}>
-            {s}
-          </div>
-          {i < steps.length - 1 && <span className="text-[#d1d1d6] text-xs">›</span>}
-        </div>
-      ))}
-    </div>
-  );
-}
+import { WizardLayout } from '../WizardLayout';
 
 function STitle({ title, sub }) {
   return (
@@ -314,9 +296,8 @@ export function Step2Application() {
     { label: 'Confirm',      component: <ConfirmDetails onFinish={() => dispatch({ type: 'SET_STEP', step: 2 })} /> },
   ];
   return (
-    <div className="max-w-2xl mx-auto px-6 pb-24 pt-8">
-      <SubStepBar steps={SUBSTEPS.map(s => s.label)} current={subStep} />
-      <div className="animate-fade-up" key={subStep}>{SUBSTEPS[subStep].component}</div>
-    </div>
+    <WizardLayout title="Your application" steps={SUBSTEPS.map(s => s.label)} current={subStep}>
+      {SUBSTEPS[subStep].component}
+    </WizardLayout>
   );
 }
