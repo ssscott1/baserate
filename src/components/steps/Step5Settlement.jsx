@@ -9,15 +9,17 @@ import { MOCK_DEALERS, formatCurrency, formatRate, calcMonthly, mockCall } from 
 
 function SubStepBar({ steps, current }) {
   return (
-    <div className="flex items-center gap-1.5 mb-7 overflow-x-auto pb-1">
+    <div className="flex items-center gap-1.5 mb-8 overflow-x-auto pb-1">
       {steps.map((s, i) => (
         <div key={s} className="flex items-center gap-1.5 shrink-0">
-          <div className="px-3 py-1 rounded-lg text-[11px] font-semibold transition-all" style={{
-            background: i === current ? 'rgba(0,229,160,0.12)' : i < current ? 'rgba(255,255,255,0.06)' : 'transparent',
-            color: i === current ? '#00e5a0' : i < current ? '#9898b0' : '#3a3a50',
-            border: i === current ? '1px solid rgba(0,229,160,0.25)' : '1px solid transparent',
-          }}>{s}</div>
-          {i < steps.length - 1 && <span className="text-[#2a2a3a] text-xs">›</span>}
+          <div className="px-3 py-1 rounded-lg text-[11px] font-semibold transition-all"
+            style={{
+              background: i === current ? '#1d1d1f' : i < current ? '#eef7f3' : '#f5f5f7',
+              color: i === current ? 'white' : i < current ? '#007a5a' : '#adadb3',
+            }}>
+            {s}
+          </div>
+          {i < steps.length - 1 && <span className="text-[#d1d1d6] text-xs">›</span>}
         </div>
       ))}
     </div>
@@ -26,9 +28,9 @@ function SubStepBar({ steps, current }) {
 
 function STitle({ title, sub }) {
   return (
-    <div className="mb-5">
-      <h2 className="text-2xl font-bold text-[#f0f0f6] tracking-tight mb-1">{title}</h2>
-      {sub && <p className="text-sm text-[#9898b0]">{sub}</p>}
+    <div className="mb-7">
+      <h2 className="text-[28px] font-bold text-[#1d1d1f] tracking-tight mb-2" style={{ letterSpacing: '-0.02em' }}>{title}</h2>
+      {sub && <p className="text-[15px] text-[#6e6e73] leading-relaxed">{sub}</p>}
     </div>
   );
 }
@@ -52,26 +54,27 @@ function CreditProposal({ onNext }) {
   ];
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Credit Proposal Disclosure" sub="Review the proposed credit arrangement before signing." />
-      <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="grid grid-cols-2 gap-px" style={{ background: 'rgba(255,255,255,0.06)' }}>
-          {rows.map(([k, v]) => (
-            <div key={k} className="px-4 py-3 flex flex-col gap-0.5" style={{ background: '#0e0e18' }}>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72]">{k}</span>
-              <span className="font-mono text-sm font-semibold text-[#f0f0f6]">{v}</span>
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="grid grid-cols-2">
+          {rows.map(([k, v], i) => (
+            <div key={k} className="px-5 py-4 flex flex-col gap-0.5 border-b border-r border-[rgba(0,0,0,0.06)]">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#86868b]">{k}</span>
+              <span className="font-mono text-[15px] font-semibold text-[#1d1d1f]">{v}</span>
             </div>
           ))}
         </div>
-        <div className="px-5 py-4" style={{ background: '#0a0a12', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72] mb-2">How Baserate is paid</p>
-          <p className="text-xs text-[#9898b0] leading-relaxed">
-            Baserate receives a volume-based fee from Plenti Auto. This is not a commission based on rate or loan size,
-            and does not affect the rate offered to you.
+        <div className="px-6 py-5 bg-[#f5f5f7] border-t border-[rgba(0,0,0,0.06)]">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#86868b] mb-2">How Baserate is paid</p>
+          <p className="text-sm text-[#6e6e73] leading-relaxed">
+            Baserate receives a volume-based fee from Plenti Auto. This is not a commission based on rate or loan size, and does not affect the rate offered to you.
           </p>
         </div>
       </div>
-      <Toggle checked={acked} onChange={setAcked} label="I acknowledge I have received and read this Credit Proposal Disclosure" required />
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <Toggle checked={acked} onChange={setAcked} label="I acknowledge I have received and read this Credit Proposal Disclosure" required />
+      </div>
       <Button onClick={() => { dispatch({ type: 'ADD_LOG', actor: 'Applicant', message: 'Credit Proposal Disclosure acknowledged' }); onNext(); }} disabled={!acked} size="lg" className="w-full">
         Continue to contract →
       </Button>
@@ -103,7 +106,7 @@ function ContractDocuments({ onNext }) {
     const canvas = canvasRef.current; const ctx = canvas.getContext('2d');
     const pos = getPos(e, canvas);
     ctx.beginPath(); ctx.moveTo(lastPos.x, lastPos.y); ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = '#00e5a0'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#1d1d1f'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.stroke(); setLastPos(pos);
   };
   const endDraw = () => setIsDrawing(false);
@@ -120,43 +123,43 @@ function ContractDocuments({ onNext }) {
   if (signing) return <LoadingState message="Processing your signature…" submessage="Timestamping and securing your signed document" />;
 
   if (signed) return (
-    <div className="flex flex-col gap-5 animate-fade-up">
-      <div className="flex items-center gap-3 p-5 rounded-xl" style={{ background: 'rgba(0,229,160,0.07)', border: '1px solid rgba(0,229,160,0.25)' }}>
+    <div className="flex flex-col gap-6 animate-fade-up">
+      <div className="flex items-center gap-3 p-5 bg-[#eef7f3] border border-[#d1ede4] rounded-2xl">
         <Tick size={28} />
-        <div><p className="font-semibold text-[#f0f0f6]">Documents signed</p><p className="text-xs text-[#5c5c72]">Timestamped and secured</p></div>
+        <div><p className="font-semibold text-[#1d1d1f]">Documents signed</p><p className="text-sm text-[#86868b]">Timestamped and secured</p></div>
       </div>
       <Button onClick={onNext} size="lg" className="w-full">Continue to dealer details →</Button>
     </div>
   );
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Contract documents" sub="You must view the contract before signing." />
       {!viewed ? (
-        <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-          <div className="px-4 py-3" style={{ background: '#0a0a12', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72]">Precontractual Statement — Consumer Credit Contract</p>
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-[rgba(0,0,0,0.06)] bg-[#f5f5f7]">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#86868b]">Precontractual Statement — Consumer Credit Contract</p>
           </div>
-          <div className="p-5 font-mono text-xs text-[#9898b0] leading-relaxed max-h-52 overflow-y-auto space-y-2" style={{ background: '#0e0e18' }}>
-            <p><span className="text-[#5c5c72]">Lender:</span> Plenti RE Limited ACN 636 651 150</p>
-            <p><span className="text-[#5c5c72]">Annual Percentage Rate:</span> 6.49% p.a. (fixed)</p>
-            <p><span className="text-[#5c5c72]">Establishment Fee:</span> $395 (capitalised)</p>
-            <p><span className="text-[#5c5c72]">Monthly Account Fee:</span> Nil</p>
-            <p><span className="text-[#5c5c72]">Early termination fee:</span> Nil</p>
-            <p className="pt-2 text-[#f0f0f6] font-semibold">Your obligations</p>
+          <div className="p-6 font-mono text-xs text-[#6e6e73] leading-relaxed max-h-56 overflow-y-auto space-y-2">
+            <p><span className="text-[#86868b]">Lender:</span> Plenti RE Limited ACN 636 651 150</p>
+            <p><span className="text-[#86868b]">Annual Percentage Rate:</span> 6.49% p.a. (fixed)</p>
+            <p><span className="text-[#86868b]">Establishment Fee:</span> $395 (capitalised)</p>
+            <p><span className="text-[#86868b]">Monthly Account Fee:</span> Nil</p>
+            <p><span className="text-[#86868b]">Early termination fee:</span> Nil</p>
+            <p className="pt-2 text-[#1d1d1f] font-semibold">Your obligations</p>
             <p>You must make repayments on the dates specified. Default may result in repossession of the vehicle and a listing on your credit file.</p>
-            <p className="pt-2 text-[#f0f0f6] font-semibold">Hardship</p>
+            <p className="pt-2 text-[#1d1d1f] font-semibold">Hardship</p>
             <p>If you experience financial hardship, contact Plenti at hardship@plenti.com.au or 1300 660 000 before missing a payment.</p>
-            <p className="pt-2 text-[#f0f0f6] font-semibold">Complaints</p>
+            <p className="pt-2 text-[#1d1d1f] font-semibold">Complaints</p>
             <p>AFCA membership: 12345. Contact: complaints@plenti.com.au or afca.org.au / 1800 931 678.</p>
           </div>
-          <div className="p-4" style={{ background: '#0a0a12', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="p-5 bg-[#f5f5f7] border-t border-[rgba(0,0,0,0.06)]">
             <Button onClick={() => setViewed(true)} variant="secondary" className="w-full">I have read this document</Button>
           </div>
         </div>
       ) : (
-        <div className="animate-fade-up rounded-xl p-5" style={{ background: '#0e0e18', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72] mb-4">Sign the contract</p>
+        <div className="animate-fade-up bg-white rounded-2xl shadow-sm p-6">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#86868b] mb-5">Sign the contract</p>
           {!drawing ? (
             <div className="flex flex-col gap-3">
               <Button onClick={() => setDrawing(true)} variant="secondary" className="w-full">✍  Draw my signature</Button>
@@ -164,11 +167,11 @@ function ContractDocuments({ onNext }) {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              <p className="text-xs text-[#5c5c72]">Draw your signature below</p>
+              <p className="text-sm text-[#86868b]">Draw your signature below</p>
               <canvas
                 ref={canvasRef} width={600} height={140}
-                className="w-full h-28 rounded-xl touch-none"
-                style={{ background: '#0a0a12', border: '1px solid rgba(0,229,160,0.2)', cursor: 'crosshair' }}
+                className="w-full h-28 rounded-xl touch-none border border-[rgba(0,0,0,0.1)]"
+                style={{ background: '#f5f5f7', cursor: 'crosshair' }}
                 onMouseDown={startDraw} onMouseMove={draw} onMouseUp={endDraw} onMouseLeave={endDraw}
                 onTouchStart={startDraw} onTouchMove={draw} onTouchEnd={endDraw}
               />
@@ -197,45 +200,44 @@ function DealerVehicle({ onNext }) {
   const canContinue = selected && make && model && vin.length >= 6;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Dealer & vehicle" sub="Licensed dealers only — private sales are not eligible." />
 
-      <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(255,107,107,0.06)', border: '1px solid rgba(255,107,107,0.2)' }}>
-        <span className="text-[#ff6b6b] text-sm shrink-0 mt-0.5">⚠</span>
+      <div className="flex items-start gap-3 p-5 bg-[#fdf0ef] border border-[#fad5d2] rounded-2xl">
+        <span className="text-[#c0392b] text-sm shrink-0 mt-0.5">⚠</span>
         <div>
-          <p className="text-sm font-semibold text-[#ff6b6b] mb-0.5">Licensed dealer only</p>
-          <p className="text-xs text-[#9898b0]">Only available for purchases from a licensed motor dealer. Private sales cannot be funded through Baserate.</p>
+          <p className="text-sm font-semibold text-[#c0392b] mb-0.5">Licensed dealer only</p>
+          <p className="text-sm text-[#6e6e73]">Only available for purchases from a licensed motor dealer. Private sales cannot be funded through Baserate.</p>
         </div>
       </div>
 
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72] mb-3">Select dealer</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#86868b] mb-3">Select dealer</p>
         <Input placeholder="Search by dealer name…" value={search} onChange={setSearch} />
-        <div className="mt-2 flex flex-col gap-1.5 max-h-52 overflow-y-auto">
+        <div className="mt-3 flex flex-col gap-2 max-h-56 overflow-y-auto">
           {filtered.map(d => (
             <button key={d.id}
               onClick={() => { setSelected(d); dispatch({ type: 'UPDATE_DOCS', data: { dealerName: d.name, dealerABN: d.abn, dealerLicence: d.licence } }); }}
-              className="flex justify-between items-center p-3 rounded-xl text-left transition-all w-full"
+              className="flex justify-between items-center p-4 rounded-xl text-left transition-all w-full border"
               style={{
-                background: selected?.id === d.id ? 'rgba(0,229,160,0.07)' : 'rgba(255,255,255,0.03)',
-                border: selected?.id === d.id ? '1px solid rgba(0,229,160,0.3)' : '1px solid rgba(255,255,255,0.07)',
+                background: selected?.id === d.id ? '#eef7f3' : 'white',
+                borderColor: selected?.id === d.id ? '#d1ede4' : 'rgba(0,0,0,0.08)',
               }}
             >
               <div>
-                <p className="text-sm font-medium text-[#f0f0f6]">{d.name}</p>
-                <p className="text-xs text-[#5c5c72]">ABN {d.abn} · Licence {d.licence}</p>
+                <p className="text-[15px] font-medium text-[#1d1d1f]">{d.name}</p>
+                <p className="text-xs text-[#86868b]">ABN {d.abn} · Licence {d.licence}</p>
               </div>
               {selected?.id === d.id && <Tick size={16} />}
             </button>
           ))}
           <button onClick={() => setAddNew(v => !v)}
-            className="p-3 rounded-xl text-[#5c5c72] text-sm text-center w-full transition-all"
-            style={{ border: '1px dashed rgba(255,255,255,0.1)', background: 'transparent' }}>
+            className="p-4 rounded-xl text-[#86868b] text-sm text-center w-full transition-all border-2 border-dashed border-[rgba(0,0,0,0.08)] bg-transparent hover:bg-white">
             + Add new dealer
           </button>
         </div>
         {addNew && (
-          <div className="mt-3 flex flex-col gap-3 animate-fade-up">
+          <div className="mt-4 flex flex-col gap-4 animate-fade-up">
             <Input label="Dealer legal name" placeholder="Smith's Auto Group Pty Ltd" />
             <Input label="ABN" placeholder="61 004 073 150" />
             <Input label="Dealer licence number" placeholder="MD99999" />
@@ -271,54 +273,54 @@ function InvoiceApproval({ onNext }) {
   const monthly = calcMonthly(quote.loanAmount, approval.approvedRate || 6.49, quote.term);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Approve the dealer invoice" sub="Confirm the final amount before settlement proceeds." />
 
-      {/* Invoice card */}
-      <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="flex justify-between items-start px-5 py-4" style={{ background: '#0a0a12', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="flex justify-between items-start px-6 py-5 border-b border-[rgba(0,0,0,0.06)] bg-[#f5f5f7]">
           <div>
-            <p className="font-bold text-[#f0f0f6]">{docs.dealerName || 'Sydney City Toyota'}</p>
-            <p className="text-xs text-[#5c5c72]">ABN {docs.dealerABN || '61 004 073 150'}</p>
-            <p className="text-xs text-[#3a3a50] font-mono">INV-{String(Date.now()).slice(-5)}</p>
+            <p className="font-bold text-[#1d1d1f]">{docs.dealerName || 'Sydney City Toyota'}</p>
+            <p className="text-xs text-[#86868b]">ABN {docs.dealerABN || '61 004 073 150'}</p>
+            <p className="text-xs text-[#adadb3] font-mono">INV-{String(Date.now()).slice(-5)}</p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] text-[#5c5c72] uppercase tracking-wider">Invoice date</p>
-            <p className="text-sm font-mono text-[#9898b0]">{new Date().toLocaleDateString('en-AU')}</p>
+            <p className="text-[10px] text-[#86868b] uppercase tracking-wider">Invoice date</p>
+            <p className="text-sm font-mono text-[#6e6e73]">{new Date().toLocaleDateString('en-AU')}</p>
           </div>
         </div>
-        <div className="px-5 py-4" style={{ background: '#0e0e18', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="px-6 py-4 border-b border-[rgba(0,0,0,0.06)]">
           <div className="flex justify-between mb-1">
-            <span className="text-sm text-[#9898b0]">{docs.vehicleMake || 'Toyota'} {docs.vehicleModel || 'Camry'} {new Date().getFullYear()}</span>
-            <span className="font-mono font-semibold text-[#f0f0f6]">{formatCurrency(quote.loanAmount)}</span>
+            <span className="text-[15px] text-[#6e6e73]">{docs.vehicleMake || 'Toyota'} {docs.vehicleModel || 'Camry'} {new Date().getFullYear()}</span>
+            <span className="font-mono font-semibold text-[#1d1d1f]">{formatCurrency(quote.loanAmount)}</span>
           </div>
-          {docs.vehicleVIN && <p className="text-xs font-mono text-[#3a3a50]">VIN: {docs.vehicleVIN}</p>}
+          {docs.vehicleVIN && <p className="text-xs font-mono text-[#adadb3]">VIN: {docs.vehicleVIN}</p>}
         </div>
-        <div className="flex justify-between items-center px-5 py-4" style={{ background: '#0a0a12', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <span className="font-semibold text-[#f0f0f6]">Total payable</span>
-          <span className="font-mono text-xl font-bold text-[#f0f0f6]">{formatCurrency(quote.loanAmount)}</span>
+        <div className="flex justify-between items-center px-6 py-4 border-b border-[rgba(0,0,0,0.06)]">
+          <span className="font-semibold text-[#1d1d1f]">Total payable</span>
+          <span className="font-mono text-xl font-bold text-[#1d1d1f]">{formatCurrency(quote.loanAmount)}</span>
         </div>
-        <div className="px-5 py-4" style={{ background: '#0e0e18' }}>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72] mb-1.5">Payment will be sent to</p>
-          <p className="text-sm font-medium text-[#f0f0f6]">{docs.dealerName || 'Sydney City Toyota'} — Operating Account</p>
-          <p className="font-mono text-sm text-[#5c5c72]">BSB 063-012 · Acct 1234 5678</p>
+        <div className="px-6 py-4 bg-[#f5f5f7]">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#86868b] mb-1.5">Payment will be sent to</p>
+          <p className="text-[15px] font-medium text-[#1d1d1f]">{docs.dealerName || 'Sydney City Toyota'} — Operating Account</p>
+          <p className="font-mono text-sm text-[#86868b]">BSB 063-012 · Acct 1234 5678</p>
         </div>
       </div>
 
-      {/* Final terms */}
-      <div className="rounded-xl p-4" style={{ background: '#0e0e18', border: '1px solid rgba(255,255,255,0.08)' }}>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72] mb-3">Your final loan terms</p>
-        <div className="grid grid-cols-2 gap-3">
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#86868b] mb-4">Your final loan terms</p>
+        <div className="grid grid-cols-2 gap-4">
           {[['Loan amount', formatCurrency(quote.loanAmount)], ['Term', `${quote.term} months`], ['Rate', formatRate(approval.approvedRate || 6.49)], ['Monthly', formatCurrency(monthly)], ['Balloon', 'Nil'], ['First repayment', '30 days post-settlement']].map(([k, v]) => (
             <div key={k}>
-              <p className="text-[10px] text-[#5c5c72] uppercase tracking-wider">{k}</p>
-              <p className="font-mono font-semibold text-[#f0f0f6] text-sm">{v}</p>
+              <p className="text-[10px] text-[#86868b] uppercase tracking-wider">{k}</p>
+              <p className="font-mono font-semibold text-[#1d1d1f] text-sm">{v}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <Toggle checked={confirmed} onChange={setConfirmed} label="I approve this invoice amount, terms, and authorise direct payment to the dealer" required />
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <Toggle checked={confirmed} onChange={setConfirmed} label="I approve this invoice amount, terms, and authorise direct payment to the dealer" required />
+      </div>
       <Button
         onClick={() => {
           dispatch({ type: 'UPDATE_DOCS', data: { invoiceAmount: quote.loanAmount, invoiceApproved: true } });
@@ -388,17 +390,17 @@ function SettlementChecklist() {
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Settlement in progress" sub="Financier is verifying everything and paying the dealer directly." />
 
-      <div className="rounded-xl p-5" style={{ background: '#0e0e18', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="bg-white rounded-2xl shadow-sm p-6">
         {checks.map(c => <StatusRow key={c.id} status={c.status} label={c.label} detail={c.detail} />)}
       </div>
 
       {fraudHeld && (
-        <div className="animate-fade-up p-5 rounded-xl" style={{ background: 'rgba(255,107,107,0.07)', border: '1px solid rgba(255,107,107,0.3)' }}>
-          <p className="font-bold text-[#ff6b6b] mb-2">⚠ Held for manual review</p>
-          <p className="text-sm text-[#9898b0] leading-relaxed">
+        <div className="animate-fade-up p-6 bg-[#fdf0ef] border border-[#fad5d2] rounded-2xl">
+          <p className="font-bold text-[#c0392b] mb-2">⚠ Held for manual review</p>
+          <p className="text-[15px] text-[#6e6e73] leading-relaxed">
             Bank account details for this dealer have changed since the last verified payment.
             The payment has been stopped pending investigation.
             Our fraud team will contact you within 2 hours. Reference: FRD-{String(Date.now()).slice(-6)}.
@@ -427,7 +429,7 @@ export function Step5Settlement() {
     { label: 'Settlement', component: <SettlementChecklist /> },
   ];
   return (
-    <div className="max-w-2xl mx-auto px-5 pb-20 pt-6">
+    <div className="max-w-2xl mx-auto px-6 pb-24 pt-8">
       <SubStepBar steps={SUBSTEPS.map(s => s.label)} current={subStep} />
       <div className="animate-fade-up" key={subStep}>{SUBSTEPS[subStep].component}</div>
     </div>

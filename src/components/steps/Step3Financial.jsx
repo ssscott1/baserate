@@ -22,15 +22,17 @@ const MOCK_BANK_DATA = {
 
 function SubStepBar({ steps, current }) {
   return (
-    <div className="flex items-center gap-1.5 mb-7 overflow-x-auto pb-1">
+    <div className="flex items-center gap-1.5 mb-8 overflow-x-auto pb-1">
       {steps.map((s, i) => (
         <div key={s} className="flex items-center gap-1.5 shrink-0">
-          <div className="px-3 py-1 rounded-lg text-[11px] font-semibold transition-all" style={{
-            background: i === current ? 'rgba(0,229,160,0.12)' : i < current ? 'rgba(255,255,255,0.06)' : 'transparent',
-            color: i === current ? '#00e5a0' : i < current ? '#9898b0' : '#3a3a50',
-            border: i === current ? '1px solid rgba(0,229,160,0.25)' : '1px solid transparent',
-          }}>{s}</div>
-          {i < steps.length - 1 && <span className="text-[#2a2a3a] text-xs">›</span>}
+          <div className="px-3 py-1 rounded-lg text-[11px] font-semibold transition-all"
+            style={{
+              background: i === current ? '#1d1d1f' : i < current ? '#eef7f3' : '#f5f5f7',
+              color: i === current ? 'white' : i < current ? '#007a5a' : '#adadb3',
+            }}>
+            {s}
+          </div>
+          {i < steps.length - 1 && <span className="text-[#d1d1d6] text-xs">›</span>}
         </div>
       ))}
     </div>
@@ -38,7 +40,12 @@ function SubStepBar({ steps, current }) {
 }
 
 function STitle({ title, sub }) {
-  return <div className="mb-5"><h2 className="text-2xl font-bold text-[#f0f0f6] tracking-tight mb-1">{title}</h2>{sub && <p className="text-sm text-[#9898b0]">{sub}</p>}</div>;
+  return (
+    <div className="mb-7">
+      <h2 className="text-[28px] font-bold text-[#1d1d1f] tracking-tight mb-2" style={{ letterSpacing: '-0.02em' }}>{title}</h2>
+      {sub && <p className="text-[15px] text-[#6e6e73] leading-relaxed">{sub}</p>}
+    </div>
+  );
 }
 
 function BankConnect({ onNext, onManual }) {
@@ -59,36 +66,38 @@ function BankConnect({ onNext, onManual }) {
   };
 
   if (phase === 'consent') return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Connect your bank" sub="Government-regulated Consumer Data Right (CDR) — read-only, time-limited." />
-      <div className="rounded-xl p-5" style={{ background: 'rgba(0,229,160,0.05)', border: '1px solid rgba(0,229,160,0.18)' }}>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#00e5a0] mb-3">Your CDR consent</p>
+      <div className="bg-[#eef7f3] border border-[#d1ede4] rounded-2xl p-6">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#007a5a] mb-4">Your CDR consent</p>
         {['Read-only access to 90 days of transactions', 'Access expires in 24 hours — revocable any time', 'Used only for this credit assessment', 'Regulated under the Consumer Data Right Act 2019'].map(t => (
-          <div key={t} className="flex items-start gap-2 mb-2">
-            <span className="text-[#00e5a0] shrink-0 text-xs mt-0.5">✓</span>
-            <p className="text-sm text-[#9898b0]">{t}</p>
+          <div key={t} className="flex items-start gap-2.5 mb-2.5">
+            <span className="text-[#007a5a] shrink-0 text-sm mt-0.5">✓</span>
+            <p className="text-[15px] text-[#6e6e73]">{t}</p>
           </div>
         ))}
-        <div className="mt-4"><Select label="Select your bank" value={selectedBank} onChange={setSelectedBank} options={banks.map(b => ({ value: b, label: b }))} /></div>
+        <div className="mt-5">
+          <Select label="Select your bank" value={selectedBank} onChange={setSelectedBank} options={banks.map(b => ({ value: b, label: b }))} />
+        </div>
       </div>
       <Button onClick={() => setPhase('login')} disabled={!selectedBank} size="lg" className="w-full">Connect securely →</Button>
-      <button onClick={onManual} className="text-sm text-[#5c5c72] hover:text-[#9898b0] text-center transition-colors">Enter details manually instead</button>
+      <button onClick={onManual} className="text-sm text-[#86868b] hover:text-[#6e6e73] text-center transition-colors">Enter details manually instead</button>
     </div>
   );
 
   if (phase === 'login') return (
-    <div className="flex flex-col gap-5 animate-fade-up">
+    <div className="flex flex-col gap-6 animate-fade-up">
       <STitle title={selectedBank} sub="Demo bank login — enter anything to proceed." />
-      <div className="rounded-xl p-5" style={{ background: '#0e0e18', border: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="flex items-center gap-2 mb-4 p-2.5 rounded-lg" style={{ background: 'rgba(0,229,160,0.06)', border: '1px solid rgba(0,229,160,0.15)' }}>
-          <span className="text-[#00e5a0] text-sm">🔒</span>
-          <p className="text-xs text-[#5c5c72]">Secure connection via Open Banking CDR</p>
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <div className="flex items-center gap-2 mb-5 p-3 rounded-xl bg-[#eef7f3] border border-[#d1ede4]">
+          <span className="text-[#007a5a] text-sm">🔒</span>
+          <p className="text-sm text-[#6e6e73]">Secure connection via Open Banking CDR</p>
         </div>
         <div className="flex flex-col gap-4">
           <Input label="Customer ID" value={loginUser} onChange={setLoginUser} placeholder="Enter your customer ID" />
           <Input label="Password" value={loginPass} onChange={setLoginPass} type="password" placeholder="••••••••" />
         </div>
-        <Button onClick={doConnect} disabled={!loginUser || !loginPass} size="lg" className="w-full mt-4">Log in & authorise →</Button>
+        <Button onClick={doConnect} disabled={!loginUser || !loginPass} size="lg" className="w-full mt-5">Log in & authorise →</Button>
       </div>
     </div>
   );
@@ -96,25 +105,26 @@ function BankConnect({ onNext, onManual }) {
   if (phase === 'retrieving') return <LoadingState message="Retrieving your transactions…" submessage="Categorising 90 days of data via Open Banking CDR" />;
 
   return (
-    <div className="flex flex-col gap-5 animate-fade-up">
-      <div className="flex items-center gap-3 p-4 rounded-xl" style={{ background: 'rgba(0,229,160,0.07)', border: '1px solid rgba(0,229,160,0.25)' }}>
-        <Tick size={24} /><div><p className="font-semibold text-[#f0f0f6] text-sm">Bank connected</p><p className="text-xs text-[#5c5c72]">{selectedBank} · 90 days retrieved</p></div>
+    <div className="flex flex-col gap-6 animate-fade-up">
+      <div className="flex items-center gap-3 p-5 bg-[#eef7f3] border border-[#d1ede4] rounded-2xl">
+        <Tick size={24} />
+        <div><p className="font-semibold text-[#1d1d1f]">Bank connected</p><p className="text-sm text-[#86868b]">{selectedBank} · 90 days retrieved</p></div>
       </div>
-      <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="grid grid-cols-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          {[['Monthly income', formatCurrency(MOCK_BANK_DATA.income), '#00e5a0'], ['Monthly expenses', formatCurrency(MOCK_BANK_DATA.expenses), '#f0f0f6'], ['Existing debts', formatCurrency(MOCK_BANK_DATA.existingDebts), '#ff6b6b']].map(([k, v, c], i) => (
-            <div key={k} className="p-4 text-center" style={{ borderRight: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none', background: '#0a0a12' }}>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72] mb-1">{k}</p>
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="grid grid-cols-3 divide-x divide-[rgba(0,0,0,0.06)] border-b border-[rgba(0,0,0,0.06)]">
+          {[['Monthly income', formatCurrency(MOCK_BANK_DATA.income), '#007a5a'], ['Monthly expenses', formatCurrency(MOCK_BANK_DATA.expenses), '#1d1d1f'], ['Existing debts', formatCurrency(MOCK_BANK_DATA.existingDebts), '#c0392b']].map(([k, v, c]) => (
+            <div key={k} className="p-4 text-center">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#86868b] mb-1">{k}</p>
               <p className="font-mono text-lg font-bold" style={{ color: c }}>{v}</p>
             </div>
           ))}
         </div>
-        <div className="p-4" style={{ background: '#0e0e18' }}>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c72] mb-3">Categorised transactions</p>
-          {MOCK_BANK_DATA.categories.map(c => (
-            <div key={c.name} className="flex justify-between py-1.5 text-sm" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-              <span className="text-[#9898b0]">{c.name}</span>
-              <span className="font-mono font-medium" style={{ color: c.type === 'income' ? '#00e5a0' : c.type === 'debt' ? '#ff6b6b' : '#f0f0f6' }}>
+        <div className="p-5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#86868b] mb-4">Categorised transactions</p>
+          {MOCK_BANK_DATA.categories.map((c, i, arr) => (
+            <div key={c.name} className={`flex justify-between py-3 text-sm ${i < arr.length - 1 ? 'border-b border-[rgba(0,0,0,0.06)]' : ''}`}>
+              <span className="text-[#6e6e73]">{c.name}</span>
+              <span className="font-mono font-medium" style={{ color: c.type === 'income' ? '#007a5a' : c.type === 'debt' ? '#c0392b' : '#1d1d1f' }}>
                 {c.type === 'income' ? '+' : '-'}{formatCurrency(c.amount)}/mo
               </span>
             </div>
@@ -132,21 +142,20 @@ function ManualEntry({ onNext }) {
   const [expenses, setExpenses] = useState('');
   const [uploaded, setUploaded] = useState(false);
   return (
-    <div className="flex flex-col gap-5 animate-fade-up">
-      <div>
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full mb-3" style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)' }}>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#f59e0b]">Manually verified</span>
-        </div>
-        <STitle title="Manual income entry" sub="Application will be badged as manually verified — processing may take longer." />
+    <div className="flex flex-col gap-6 animate-fade-up">
+      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#fef3e2] border border-[#f59e0b]/30 self-start">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-[#b45309]">Manually verified</span>
       </div>
+      <STitle title="Manual income entry" sub="Application will be badged as manually verified — processing may take longer." />
       <div className="grid grid-cols-2 gap-4">
         <Input label="Annual income" value={income} onChange={setIncome} prefix="$" type="number" placeholder="95,000" />
         <Input label="Annual expenses" value={expenses} onChange={setExpenses} prefix="$" type="number" placeholder="28,000" />
       </div>
-      <div className="rounded-xl p-6 flex flex-col items-center gap-3 text-center" style={{ background: '#0a0a12', border: '2px dashed rgba(255,255,255,0.08)' }}>
-        <span className="text-3xl">📄</span>
-        <p className="text-sm font-medium text-[#f0f0f6]">Upload payslips or ATO Notice of Assessment</p>
-        <button onClick={() => setUploaded(true)} className="px-4 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: uploaded ? 'rgba(0,229,160,0.12)' : 'rgba(255,255,255,0.06)', color: uploaded ? '#00e5a0' : '#9898b0', border: uploaded ? '1px solid rgba(0,229,160,0.3)' : '1px solid rgba(255,255,255,0.1)' }}>
+      <div className="bg-white rounded-2xl shadow-sm p-8 flex flex-col items-center gap-4 text-center border-2 border-dashed border-[rgba(0,0,0,0.08)]">
+        <span className="text-4xl">📄</span>
+        <p className="text-[15px] font-medium text-[#1d1d1f]">Upload payslips or ATO Notice of Assessment</p>
+        <button onClick={() => setUploaded(true)} className="px-4 py-2 rounded-xl text-sm font-medium transition-all border"
+          style={{ background: uploaded ? '#eef7f3' : '#f5f5f7', color: uploaded ? '#007a5a' : '#6e6e73', borderColor: uploaded ? '#d1ede4' : 'rgba(0,0,0,0.08)' }}>
           {uploaded ? '✓ payslip_march.pdf' : 'Upload document (demo)'}
         </button>
       </div>
@@ -160,13 +169,17 @@ function AssetsLiabilities({ onNext }) {
   const { financial } = state;
   const update = data => dispatch({ type: 'UPDATE_FINANCIAL', data });
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Assets & liabilities" sub="Brief financial snapshot for serviceability assessment." />
-      <Select label="Housing situation" value={financial.housingStatus} onChange={v => update({ housingStatus: v })} options={[{ value: 'mortgage', label: 'Paying a mortgage' }, { value: 'own', label: 'Own outright' }, { value: 'rent', label: 'Renting' }, { value: 'boarding', label: 'Boarding / living with family' }]} />
-      <Toggle checked={financial.hasInvestmentProperty} onChange={v => update({ hasInvestmentProperty: v })} label="I have an investment property" />
-      <div className="grid grid-cols-2 gap-4">
-        <Input label="Savings / assets (approx.)" prefix="$" type="number" placeholder="25,000" />
-        <Input label="Other debts (monthly)" prefix="$" type="number" placeholder="500" />
+      <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col gap-5">
+        <Select label="Housing situation" value={financial.housingStatus} onChange={v => update({ housingStatus: v })} options={[{ value: 'mortgage', label: 'Paying a mortgage' }, { value: 'own', label: 'Own outright' }, { value: 'rent', label: 'Renting' }, { value: 'boarding', label: 'Boarding / living with family' }]} />
+        <div className="border-t border-[rgba(0,0,0,0.06)] pt-5">
+          <Toggle checked={financial.hasInvestmentProperty} onChange={v => update({ hasInvestmentProperty: v })} label="I have an investment property" />
+        </div>
+        <div className="border-t border-[rgba(0,0,0,0.06)] pt-5 grid grid-cols-2 gap-4">
+          <Input label="Savings / assets (approx.)" prefix="$" type="number" placeholder="25,000" />
+          <Input label="Other debts (monthly)" prefix="$" type="number" placeholder="500" />
+        </div>
       </div>
       <Button onClick={() => { dispatch({ type: 'ADD_LOG', actor: 'Applicant', message: 'Asset and liability statement submitted' }); onNext(); }} size="lg" className="w-full">Continue →</Button>
     </div>
@@ -188,21 +201,22 @@ function CreditCheck({ onNext }) {
   };
   if (checking) return <LoadingState message="Running credit check…" submessage="Submitting hard enquiry to Equifax Credit Bureau" />;
   if (done) return (
-    <div className="flex flex-col gap-5 animate-fade-up">
-      <div className="p-5 rounded-xl flex items-center gap-3" style={{ background: 'rgba(0,229,160,0.07)', border: '1px solid rgba(0,229,160,0.25)' }}>
-        <Tick size={24} /><div><p className="font-semibold text-[#f0f0f6]">Credit check complete</p><p className="text-xs text-[#5c5c72]">Equifax score: 742 · No adverse listings</p></div>
+    <div className="flex flex-col gap-6 animate-fade-up">
+      <div className="p-5 bg-[#eef7f3] border border-[#d1ede4] rounded-2xl flex items-center gap-3">
+        <Tick size={24} />
+        <div><p className="font-semibold text-[#1d1d1f]">Credit check complete</p><p className="text-sm text-[#86868b]">Equifax score: 742 · No adverse listings</p></div>
       </div>
       <Button onClick={onNext} size="lg" className="w-full">Continue →</Button>
     </div>
   );
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Credit check consent" sub="This is a hard enquiry — it will appear on your credit file." />
-      <div className="rounded-xl p-4" style={{ background: 'rgba(255,107,107,0.06)', border: '1px solid rgba(255,107,107,0.2)' }}>
-        <p className="text-sm font-semibold text-[#ff6b6b] mb-1">Hard enquiry — not a soft check</p>
-        <p className="text-sm text-[#9898b0]">Unlike the soft pre-screen we ran earlier, this will be visible to other lenders on your credit file.</p>
+      <div className="bg-[#fdf0ef] border border-[#fad5d2] rounded-2xl p-5">
+        <p className="text-sm font-semibold text-[#c0392b] mb-1">Hard enquiry — not a soft check</p>
+        <p className="text-sm text-[#6e6e73]">Unlike the soft pre-screen we ran earlier, this will be visible to other lenders on your credit file.</p>
       </div>
-      <div className="rounded-xl p-5" style={{ background: '#0e0e18', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="bg-white rounded-2xl shadow-sm p-6">
         <Toggle checked={consented} onChange={setConsented} label="I consent to a hard credit enquiry with Equifax on behalf of Baserate Financial Services Pty Ltd" required />
       </div>
       <Button onClick={runCheck} disabled={!consented} size="lg" className="w-full">Run credit check →</Button>
@@ -233,16 +247,16 @@ function AMLProcessing() {
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <STitle title="Checking your details" sub="Required AML/KYC checks before assessment." />
-      <div className="rounded-xl p-5" style={{ background: '#0e0e18', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="bg-white rounded-2xl shadow-sm p-6">
         {statuses.map(s => <StatusRow key={s.id} status={s.status} label={s.label} />)}
       </div>
       {!started && <Button onClick={runAll} size="lg" className="w-full">Run checks →</Button>}
       {complete && (
         <div className="animate-fade-up flex flex-col gap-4">
-          <div className="p-4 rounded-xl text-center" style={{ background: 'rgba(0,229,160,0.07)', border: '1px solid rgba(0,229,160,0.25)' }}>
-            <p className="font-semibold text-[#00e5a0]">All checks passed ✓</p>
+          <div className="p-4 bg-[#eef7f3] border border-[#d1ede4] rounded-2xl text-center">
+            <p className="font-semibold text-[#007a5a]">All checks passed ✓</p>
           </div>
           <Button onClick={() => dispatch({ type: 'SET_STEP', step: 3 })} size="lg" className="w-full">Continue to approval →</Button>
         </div>
@@ -263,7 +277,7 @@ export function Step3Financial() {
     { label: 'AML / KYC', component: <AMLProcessing /> },
   ];
   return (
-    <div className="max-w-2xl mx-auto px-5 pb-20 pt-6">
+    <div className="max-w-2xl mx-auto px-6 pb-24 pt-8">
       <SubStepBar steps={SUBSTEPS.map(s => s.label)} current={subStep} />
       <div className="animate-fade-up" key={subStep}>{SUBSTEPS[subStep].component}</div>
     </div>
